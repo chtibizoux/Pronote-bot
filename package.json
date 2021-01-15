@@ -1,0 +1,14 @@
+{
+    "name": "pronote-bot",
+    "version": "1.0.0",
+    "description": "A discord bot for pronote",
+    "main": "index.js",
+    "scripts": {},
+    "author": "Clément Songis",
+    "license": "ISC",
+    "dependencies": {
+        "canvas": "^2.6.1",
+        "discord.js": "^12.3.1",
+        "pronote-api": "^2.2.0"
+    }
+}
