@@ -175,7 +175,7 @@ bot.on("message", (message) => {
     }
 });
 var loginforms = [];
-function dm(message) {
+async function dm(message) {
     noUser = true;
     for (var i = 0; i < users.length; i++) {
         if (users[i].discordID === message.author.id) {
