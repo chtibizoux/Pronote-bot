@@ -191,19 +191,16 @@ function dm(message) {
         for (var i = 0; i < loginforms.length; i++) {
             if (loginforms[i].id === message.author.id) {
                 inForm = true;
-                if (loginforms[i].step === 0) {
+                if (loginforms[i].step === 0){
                     loginforms[i].url = message.content.slice(0, message.content.indexOf("/pronote/") + 9);
-                    message.author.send("2. De quelle accadémie (CAS) est tu ? (Ex: ac-nantes)\n__**Académies disponibles :**__ ||Académie d'Orleans-Tours (CAS : ac-orleans-tours)\nAcadémie de Besançon (CAS : ac-besancon)\nAcadémie de Bordeaux (CAS : ac-bordeaux)\nAcadémie de Caen (CAS : ac-caen)\nAcadémie de Clermont-Ferrand (CAS : ac-clermont)\nAcadémie de Dijon (CAS : ac-dijon)\nAcadémie de Grenoble (CAS : ac-grenoble)\nAcadémie de Lille (CAS : ac-lille)\nAcadémie de Limoges (CAS : ac-limoges)\nAcadémie de Lyon (CAS : ac-lyon)\nAcadémie de Montpellier (CAS : ac-montpellier)\nAcadémie de Nancy-Metz (CAS : ac-nancy-metz)\nAcadémie de Nantes (CAS : ac-nantes)\nAcadémie de Poitiers (CAS : ac-poitiers)\nAcadémie de Reims (CAS : ac-reims)\nAcadémie de Rouen (Arsene76) (CAS : arsene76)\nAcadémie de Rouen (CAS : ac-rouen)\nAcadémie de Strasbourg (CAS : ac-strasbourg)\nAcadémie de Toulouse (CAS : ac-toulouse)\nENT \"Agora 06\" (Nice) (CAS : agora06)\nENT \"Haute-Garonne\" (CAS : haute-garonne)\nENT \"Hauts-de-France\" (CAS : hdf)\nENT \"La Classe\" (Lyon) (CAS : laclasse)\nENT \"Lycee Connecte\" (Nouvelle-Aquitaine) (CAS : lyceeconnecte)\nENT \"Seine-et-Marne\" (CAS : seine-et-marne)\nENT \"Somme\" (CAS : somme)\nENT \"Toutatice\" (Rennes) (CAS : toutatice)\nENT \"Île de France\" (CAS : iledefrance)||");
+                    loginforms[i].cas = await pronote.getCAS(loginforms[i].url);
+                    message.author.send("2. Nom d'utilisateur");
                     loginforms[i].step = 1;
-                }else if (loginforms[i].step === 1){
-                    loginforms[i].cas = message.content;
-                    message.author.send("3. Nom d'utilisateur (prenom.nom)");
+                }else if (loginforms[i].step === 1) {
+                    loginforms[i].username = message.content;
+                    message.author.send("3. Mot de passe");
                     loginforms[i].step = 2;
                 }else if (loginforms[i].step === 2) {
-                    loginforms[i].username = message.content;
-                    message.author.send("4. Mot de passe");
-                    loginforms[i].step = 3;
-                }else if (loginforms[i].step === 3) {
                     loginforms[i].password = message.content;
                     login(loginforms[i].url, loginforms[i].username, loginforms[i].password, loginforms[i].cas, message);
                     loginforms.splice(i, 1);
@@ -550,52 +547,26 @@ async function all(url, username, password, cas, message)
 
 async function login(url, username, password, cas, message)
 {
-    const session = await pronote.login(url, username, password, cas);
-    users.push({
-        discordID: message.author.id,
-        url: url,
-        username: username,
-        password: password,
-        cas: cas
-    });
-    fs.writeFileSync('./users.json', JSON.stringify(users));
-    message.author.send("Tu as bien été connecter");
-
-    // const timetable = await session.timetable(); // Récupérer l'emploi du temps d'aujourd'hui
-    // console.log(`L'élève a ${timetable.length} cours aujourd'hui`);
-    // const marks = await session.marks(); // Récupérer les notes du trimestre
-    // console.log(`et a pour l'instant une moyenne de ${marks.averages.student} ce trimestre.`);
-
-    // champs: 'user' et 'params'
-    // fonctions: 'timetable', 'marks', 'contents', 'evaluations', 'absences', 'infos' et 'menu'
-
-    // console.log(session.user);
-    // console.log(session.params);
-
-    // const timetable = await session.timetable();
-    // console.log(timetable);
-    // const marks = await session.marks();
-    // console.log(marks);
-    // const contents = await session.contents();
-    // console.log(contents);
-    // const evaluations = await session.evaluations();
-    // console.log(evaluations);
-    // const absences = await session.absences();
-    // console.log(absences);
-    // const infos = await session.infos();
-    // console.log(infos);
-    // const homeworks = await session.homeworks();
-    // console.log(homeworks);
-    // const menu = await session.menu();
-    // console.log(menu);
-}
-login().catch(err => {
-    if (err.code === pronote.errors.WRONG_CREDENTIALS.code) {
-        console.error('Mauvais identifiants');
-    } else {
-        console.error(err);
+    try {
+        const session = await pronote.login(url, username, password, cas);
+        users.push({
+            discordID: message.author.id,
+            url: url,
+            username: username,
+            password: password,
+            cas: cas
+        });
+        fs.writeFileSync('./users.json', JSON.stringify(users));
+        message.author.send("Tu as bien été connecter");
+    } catch (error) {
+        if (err.code === pronote.errors.WRONG_CREDENTIALS.code) {
+            message.author.send("Mauvais identifiants");
+        } else {
+            message.author.send("Erreur, veuillez cotacter un administrateur");
+            console.error(err);
+        }
     }
-});
+}
 
 bot.on('messageReactionAdd', (reaction, user) => {
     if (reaction.message.channel.type === "dm") {
