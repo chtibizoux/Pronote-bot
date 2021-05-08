@@ -32,11 +32,11 @@ bot.on("message", (message) => {
         }
         if (!admin) return;
     }
-    if (message.channel.type === "dm") {
-        if (message.author.id !== bot.user.id) {
-            dm(message);
-        }
-    } else {
+    // if (message.channel.type === "dm") {
+    //     if (message.author.id !== bot.user.id) {
+    //         dm(message);
+    //     }
+    // } else {
         var noUser = true;
         if (message.content.startsWith("+help")) {
             message.channel.send("**Attention ce bot est lent!!!**\nPour te connecter ou te déconnecter envoie moi un message privé ou tape `+login`!\n`+timetable @user` Afficher l'emploie du temps de *user*\n`+info @user` affiche les informations de *user*\n`+saverage` affiche ta moyenne\n`+caverage` affiche la moyenne de ta classe\n`+all` affiche le contenu de tes cours et tes devoirs pour cette semaine (Pour le confinement)\n`+homeworks 17/05/2020 20/05/2020` affiche tes devoirs du `17/05/2020` au `20/05/2020`\n`+contents 17/05/2020 20/05/2020` affiche le contenu de tes cours du `17/05/2020` au `20/05/2020`\n`+marks` affiche tes notes\n`+evaluations` **bientôt disponible** ~~affiche tes compétences~~");
@@ -172,7 +172,7 @@ bot.on("message", (message) => {
         }else if (message.content.startsWith("+test")) {
             message.channel.send("test");
         }
-    }
+    // }
 });
 var loginforms = [];
 async function dm(message) {
@@ -350,7 +350,6 @@ async function info(url, username, password, cas, message, id)
     }
     message.channel.send("Information de <@" + id + ">:\nNom pronote: " + session.user.name + "\nClasse: " + session.user.studentClass.name + "\nGroupes:```" + groups + "\n```Information de l'établissement:\n" + session.user.establishmentsInfo[0].name + "\n" + session.user.establishmentsInfo[0].website + "\n" + session.user.establishmentsInfo[0].address + "\n" + session.user.establishmentsInfo[0].postalCode + "\n" + session.user.establishmentsInfo[0].city + "\n" + session.user.establishmentsInfo[0].country);
 }
-
 async function saverage(url, username, password, cas, message)
 {
     const session = await pronote.login(url, username, password, cas);
