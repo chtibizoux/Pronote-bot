@@ -32,147 +32,143 @@ bot.on("message", (message) => {
         }
         if (!admin) return;
     }
-    // if (message.channel.type === "dm") {
-    //     if (message.author.id !== bot.user.id) {
-    //         dm(message);
-    //     }
-    // } else {
-        var noUser = true;
-        if (message.content.startsWith("+help")) {
-            message.channel.send("**Attention ce bot est lent!!!**\nPour te connecter ou te déconnecter envoie moi un message privé ou tape `+login`!\n`+timetable @user` Afficher l'emploie du temps de *user*\n`+info @user` affiche les informations de *user*\n`+saverage` affiche ta moyenne\n`+caverage` affiche la moyenne de ta classe\n`+all` affiche le contenu de tes cours et tes devoirs pour cette semaine (Pour le confinement)\n`+homeworks 17/05/2020 20/05/2020` affiche tes devoirs du `17/05/2020` au `20/05/2020`\n`+contents 17/05/2020 20/05/2020` affiche le contenu de tes cours du `17/05/2020` au `20/05/2020`\n`+marks` affiche tes notes\n`+evaluations` **bientôt disponible** ~~affiche tes compétences~~");
-        }else if (message.content.startsWith("+login")) {
-            message.react("👍");
-            dm(message);
-        }else if (message.content.startsWith("+timetable")) {
-            if (message.content.includes("<@") && message.content.includes(">")) {
-                var id = message.content.slice(message.content.indexOf("<@") + 2,message.content.indexOf(">"));
-                for (var i = 0; i < users.length; i++) {
-                    if (users[i].discordID === id) {
-                        noUser = false;
-                        // Security
-                        var noUser2 = true;
-                        for (var y = 0; y < users.length; y++) {
-                            if (users[y].discordID === message.author.id) {
-                                noUser2 = false;
-                                timetable(users[i].url, users[i].username, users[i].password, users[i].cas, message, id);
-                            }
-                        }
-                        if (noUser2 === true) {
-                            message.reply(noconnection2);
+    var noUser = true;
+    if (message.content.startsWith("+help")) {
+        message.channel.send("**Attention ce bot est lent!!!**\nPour te connecter ou te déconnecter envoie moi un message privé ou tape `+login`!\n`+timetable @user` Afficher l'emploie du temps de *user*\n`+info @user` affiche les informations de *user*\n`+saverage` affiche ta moyenne\n`+caverage` affiche la moyenne de ta classe\n`+all` affiche le contenu de tes cours et tes devoirs pour cette semaine (Pour le confinement)\n`+homeworks 17/05/2020 20/05/2020` affiche tes devoirs du `17/05/2020` au `20/05/2020`\n`+contents 17/05/2020 20/05/2020` affiche le contenu de tes cours du `17/05/2020` au `20/05/2020`\n`+marks` affiche tes notes\n`+evaluations` **bientôt disponible** ~~affiche tes compétences~~\n`+notifications` **bientôt disponible** ~~active ou désactive les notifications~~");
+    }else if (message.content.startsWith("+login")) {
+        message.react("👍");
+        dm(message);
+    }else if (message.content.startsWith("+timetable")) {
+        if (message.content.includes("<@") && message.content.includes(">")) {
+            var id = message.content.slice(message.content.indexOf("<@") + 2,message.content.indexOf(">"));
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].discordID === id) {
+                    noUser = false;
+                    // Security
+                    var noUser2 = true;
+                    for (var y = 0; y < users.length; y++) {
+                        if (users[y].discordID === message.author.id) {
+                            noUser2 = false;
+                            timetable(users[i].url, users[i].username, users[i].password, users[i].cas, message, id);
                         }
                     }
-                }
-                if (noUser === true) {
-                    message.channel.send(message.content.slice(message.content.indexOf("<@"),message.content.indexOf(">") + 1) + " ne c'est pas connecter à pronote :slight_frown:");
-                }
-            }else {
-                for (var i = 0; i < users.length; i++) {
-                    if (users[i].discordID === message.author.id) {
-                        noUser = false;
-                        timetable(users[i].url, users[i].username, users[i].password, users[i].cas, message, message.author.id);
+                    if (noUser2 === true) {
+                        message.reply(noconnection2);
                     }
                 }
-                if (noUser === true) {
-                    message.reply(noconnection);
-                }
             }
-        }else if (message.content.startsWith("+info")) {
-            if (message.content.includes("<@") && message.content.includes(">")) {
-                var id = message.content.slice(message.content.indexOf("<@") + 2,message.content.indexOf(">"));
-                for (var i = 0; i < users.length; i++) {
-                    if (users[i].discordID === id) {
-                        noUser = false;
-                        // Security
-                        var noUser2 = true;
-                        for (var y = 0; y < users.length; y++) {
-                            if (users[y].discordID === message.author.id) {
-                                noUser2 = false;
-                                info(users[i].url, users[i].username, users[i].password, users[i].cas, message, id);
-                            }
-                        }
-                        if (noUser2 === true) {
-                            message.reply(noconnection2);
-                        }
-                    }
-                }
-                if (noUser === true) {
-                    message.channel.send(message.content.slice(message.content.indexOf("<@"),message.content.indexOf(">") + 1) + " ne c'est pas connecter à pronote :slight_frown:");
-                }
-            }else {
-                for (var i = 0; i < users.length; i++) {
-                    if (users[i].discordID === message.author.id) {
-                        noUser = false;
-                        info(users[i].url, users[i].username, users[i].password, users[i].cas, message, message.author.id);
-                    }
-                }
-                if (noUser === true) {
-                    message.reply(noconnection);
-                }
+            if (noUser === true) {
+                message.channel.send(message.content.slice(message.content.indexOf("<@"),message.content.indexOf(">") + 1) + " ne c'est pas connecter à pronote :slight_frown:");
             }
-        }else if (message.content.startsWith("+saverage")) {
+        }else {
             for (var i = 0; i < users.length; i++) {
                 if (users[i].discordID === message.author.id) {
                     noUser = false;
-                    saverage(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+                    timetable(users[i].url, users[i].username, users[i].password, users[i].cas, message, message.author.id);
                 }
             }
             if (noUser === true) {
                 message.reply(noconnection);
             }
-        }else if (message.content.startsWith("+caverage")) {
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].discordID === message.author.id) {
-                    noUser = false;
-                    caverage(users[i].url, users[i].username, users[i].password, users[i].cas, message);
-                }
-            }
-            if (noUser === true) {
-                message.reply(noconnection);
-            }
-        }else if (message.content.startsWith("+marks")) {
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].discordID === message.author.id) {
-                    noUser = false;
-                    marks(users[i].url, users[i].username, users[i].password, users[i].cas, message);
-                }
-            }
-            if (noUser === true) {
-                message.reply(noconnection);
-            }
-        }else if (message.content.startsWith("+homeworks")) {
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].discordID === message.author.id) {
-                    noUser = false;
-                    homeworks(users[i].url, users[i].username, users[i].password, users[i].cas, message);
-                }
-            }
-            if (noUser === true) {
-                message.reply(noconnection);
-            }
-        }else if (message.content.startsWith("+contents")) {
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].discordID === message.author.id) {
-                    noUser = false;
-                    contents(users[i].url, users[i].username, users[i].password, users[i].cas, message);
-                }
-            }
-            if (noUser === true) {
-                message.reply(noconnection);
-            }
-        }else if (message.content.startsWith("+all")) {
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].discordID === message.author.id) {
-                    noUser = false;
-                    all(users[i].url, users[i].username, users[i].password, users[i].cas, message);
-                }
-            }
-            if (noUser === true) {
-                message.reply(noconnection);
-            }
-        }else if (message.content.startsWith("+test")) {
-            message.channel.send("test");
         }
-    // }
+    }else if (message.content.startsWith("+info")) {
+        if (message.content.includes("<@") && message.content.includes(">")) {
+            var id = message.content.slice(message.content.indexOf("<@") + 2,message.content.indexOf(">"));
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].discordID === id) {
+                    noUser = false;
+                    // Security
+                    var noUser2 = true;
+                    for (var y = 0; y < users.length; y++) {
+                        if (users[y].discordID === message.author.id) {
+                            noUser2 = false;
+                            info(users[i].url, users[i].username, users[i].password, users[i].cas, message, id);
+                        }
+                    }
+                    if (noUser2 === true) {
+                        message.reply(noconnection2);
+                    }
+                }
+            }
+            if (noUser === true) {
+                message.channel.send(message.content.slice(message.content.indexOf("<@"),message.content.indexOf(">") + 1) + " ne c'est pas connecter à pronote :slight_frown:");
+            }
+        }else {
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].discordID === message.author.id) {
+                    noUser = false;
+                    info(users[i].url, users[i].username, users[i].password, users[i].cas, message, message.author.id);
+                }
+            }
+            if (noUser === true) {
+                message.reply(noconnection);
+            }
+        }
+    }else if (message.content.startsWith("+saverage")) {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].discordID === message.author.id) {
+                noUser = false;
+                saverage(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+            }
+        }
+        if (noUser === true) {
+            message.reply(noconnection);
+        }
+    }else if (message.content.startsWith("+caverage")) {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].discordID === message.author.id) {
+                noUser = false;
+                caverage(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+            }
+        }
+        if (noUser === true) {
+            message.reply(noconnection);
+        }
+    }else if (message.content.startsWith("+marks")) {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].discordID === message.author.id) {
+                noUser = false;
+                marks(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+            }
+        }
+        if (noUser === true) {
+            message.reply(noconnection);
+        }
+    }else if (message.content.startsWith("+homeworks")) {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].discordID === message.author.id) {
+                noUser = false;
+                homeworks(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+            }
+        }
+        if (noUser === true) {
+            message.reply(noconnection);
+        }
+    }else if (message.content.startsWith("+contents")) {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].discordID === message.author.id) {
+                noUser = false;
+                contents(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+            }
+        }
+        if (noUser === true) {
+            message.reply(noconnection);
+        }
+    }else if (message.content.startsWith("+all")) {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].discordID === message.author.id) {
+                noUser = false;
+                all(users[i].url, users[i].username, users[i].password, users[i].cas, message);
+            }
+        }
+        if (noUser === true) {
+            message.reply(noconnection);
+        }
+    }else if (message.content.startsWith("+notifications")) {
+        message.channel.send("pas encore disponible");
+    }else if (message.content.startsWith("+evaluations")) {
+        message.channel.send("pas encore disponible");
+    }
 });
 var loginforms = [];
 async function dm(message) {
